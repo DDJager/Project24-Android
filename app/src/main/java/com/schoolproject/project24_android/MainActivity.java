@@ -66,18 +66,18 @@ public class MainActivity extends AppCompatActivity {
         usernameField = (EditText) findViewById(R.id.usernameField);
         passwordField = (EditText) findViewById(R.id.passwordField);
 
-//        DownloadTask t = new DownloadTask();
-//        String result = null;
-//        try {
-//            result = t.execute("http://www.google.com").get();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
+        DownloadTask t = new DownloadTask();
+        String result = null;
+        try {
+            result = t.execute("http://www.example.com").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
 
-        //Log.i("Contents of URL", result);
+        Log.i("Contents of URL", result);
 
     }
 
