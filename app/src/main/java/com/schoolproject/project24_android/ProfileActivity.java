@@ -62,7 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         Log.i("Contents of URL profile", result);
     }
 }
