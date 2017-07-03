@@ -3,7 +3,10 @@ package com.schoolproject.project24_android;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class AchievementsActivity extends AppCompatActivity {
@@ -20,16 +24,19 @@ public class AchievementsActivity extends AppCompatActivity {
     public class DownloadTask extends AsyncTask<String, Void, String> {
 
         @Override
-        protected String doInBackground(String... urls) {
+        protected String doInBackground(String... args) {
 
             String result = "";
-            URL url;
-            HttpURLConnection urlConnection = null;
+            String credentials = args[1] + ":" + "";
+            String credBase64 = Base64.encodeToString(credentials.getBytes(), Base64.DEFAULT).replace("\n", "");
 
             try {
-                url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = urlConnection.getInputStream();
+                URL url = new URL(args[0]);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestProperty("Authorization", "Basic " + credBase64);
+                httpURLConnection.connect();
+
+                InputStream in = httpURLConnection.getInputStream();
                 InputStreamReader reader = new InputStreamReader(in);
 
                 int data = reader.read();
@@ -52,23 +59,43 @@ public class AchievementsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Log.i("resultset", result);
 
             try {
-                JSONArray jsonArray = new JSONArray(result);
 
-                for(int i = 0; i < jsonArray.length(); i++) {
-                    String username = (String) jsonArray.getJSONObject(i).get("username");
-                    String description = (String) jsonArray.getJSONObject(i).get("description");
-                    String picture_url = (String) jsonArray.getJSONObject(i).get("picture_url");
+                JSONObject jsonObject = new JSONObject(result);
 
-                    Log.i("username", username);
-                    Log.i("description", description);
-                    Log.i("picture_url", picture_url);
+                // Get the data
+                JSONArray achievements = (JSONArray) jsonObject.get("achievements");
+
+                // Define the views
+                ArrayList<String> achievement_name_list = new ArrayList<>();
+                ListView myListView = (ListView) findViewById(R.id.achievementList);
+
+                // If there are no achievements
+                if (achievements == null || achievements.length() <= 0) {
+                    achievement_name_list.add("You have no achievements");
+                } else {
+                    // Loop over the data (sub)set
+                    for (int i = 0; i < achievements.length(); i++) {
+                        String achievement_name = (String) achievements.getJSONObject(i).get("name");
+
+                        JSONObject game_set = (JSONObject) achievements.getJSONObject(i).get("game");
+                        String achievement_game_name = (String) game_set.get("name");
+
+                        achievement_name_list.add(achievement_game_name + ": " + achievement_name);
+
+                    }
                 }
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AchievementsActivity.this, android.R.layout.simple_list_item_1, achievement_name_list);
+
+                myListView.setAdapter(arrayAdapter);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
         }
 
     }
@@ -78,10 +105,11 @@ public class AchievementsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_achievements);
 
+
         DownloadTask t = new DownloadTask();
         String result = null;
         try {
-            result = t.execute("http://145.37.150.210:5000/api/v1-0/users").get();
+            result = t.execute(GlobalVariables.API_URL + "api/v1-0/achievements/" + GlobalVariables.user_id, GlobalVariables.token).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

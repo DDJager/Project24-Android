@@ -7,17 +7,6 @@
     tools:context="com.schoolproject.project24_android.NavigationActivity">
 
     <Button
-        android:id="@+id/matchHistoryButton"
-        android:layout_width="159dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="113dp"
-        android:layout_marginTop="288dp"
-        android:onClick="matchHistoryButton"
-        android:text="Match History"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/achievementButton"
         android:layout_width="159dp"
         android:layout_height="48dp"

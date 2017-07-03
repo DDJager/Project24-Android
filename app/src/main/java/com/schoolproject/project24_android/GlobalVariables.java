@@ -8,8 +8,9 @@ import android.app.Application;
 
 public class GlobalVariables extends Application {
 
-    static String token;
-    static String username;
-    static int user_id;
+    public static final String API_URL = "http://145.37.150.210:5000/";
+    public static String token;
+    public static String username;
+    public static int user_id;
 
 }

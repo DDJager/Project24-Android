@@ -62,11 +62,13 @@ public class MainActivity extends AppCompatActivity {
                 jsonObject.put("username", args[1]);
                 jsonObject.put("password", args[2]);
 
+                Log.i("json object", jsonObject.toString());
+
                 DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
                 wr.close();
-                Log.i("Register", Integer.toString(httpURLConnection.getResponseCode()));
+                Log.i("register", Integer.toString(httpURLConnection.getResponseCode()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         LoginTask task = new LoginTask();
-        task.execute("http://145.37.150.210:5000/api/v1-0/signin", usernameField.getText().toString(), passwordField.getText().toString());
+        task.execute(GlobalVariables.API_URL + "api/v1-0/signin", usernameField.getText().toString(), passwordField.getText().toString());
 
 
     }
@@ -175,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
     public void registerButton(View view) {
 
         RegisterTask task = new RegisterTask();
-        task.execute("http://145.37.150.210:5000/api/v1-0/signup", usernameField.getText().toString(), passwordField.getText().toString());
+        task.execute(GlobalVariables.API_URL + "api/v1-0/signup", usernameField.getText().toString(), passwordField.getText().toString());
 
         Toast.makeText(MainActivity.this, "Successfully registered", Toast.LENGTH_LONG).show();
     }

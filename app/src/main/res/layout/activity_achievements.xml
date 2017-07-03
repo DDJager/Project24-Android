@@ -17,5 +17,15 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="49dp"
         app:layout_constraintHorizontal_bias="0.485"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp" />
+
+    <ListView
+        android:id="@+id/achievementList"
+        android:layout_width="257dp"
+        android:layout_height="414dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="81dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
